@@ -114,7 +114,7 @@ def analyze_and_plot(G, pos, interval_name, previous_nodes, out_dir=OUT_DIR, sho
         Patch(facecolor='yellow', edgecolor='black', label='Pemain Baru')
     ]
     legend = ax.legend(handles=legend_elements, loc='upper right', fontsize=9)
-    plt.setp(legend.get_texts(), color='white')
+    plt.setp(legend.get_texts(), color='black')
 
     plt.tight_layout()
     
