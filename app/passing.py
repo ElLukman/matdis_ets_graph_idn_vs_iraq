@@ -59,14 +59,14 @@ def analyze_and_plot(G, pos, interval_name, previous_nodes, out_dir=OUT_DIR, sho
     df_cent['Total'] = df_cent['In'] + df_cent['Out']
     df_cent = df_cent.sort_values('Total', ascending=False)
 
-    print(f"\n=== Interval {interval_name} ===")
-    print(f"Nodes: {G.number_of_nodes()}, Edges: {G.number_of_edges()}")
+    # print(f"\n=== Interval {interval_name} ===")
+    # print(f"Nodes: {G.number_of_nodes()}, Edges: {G.number_of_edges()}")
     
     top_players_list = []
     
     if not df_cent.empty:
-        print("Top pemain (by Total):")
-        print(df_cent.head(5))
+        # print("Top pemain (by Total):")
+        # print(df_cent.head(5))
         
         for index, row in df_cent.head(5).iterrows():
             top_players_list.append({
@@ -127,7 +127,8 @@ def analyze_and_plot(G, pos, interval_name, previous_nodes, out_dir=OUT_DIR, sho
     plt.close(fig)
     
     if new_players_str:
-        print(f"Pemain baru di interval {interval_name}: {', '.join(new_players_str)}")
+        pass
+        # print(f"Pemain baru di interval {interval_name}: {', '.join(new_players_str)}")
 
     return {
         "interval_name": interval_name,
@@ -184,7 +185,7 @@ def generate_possession_data():
         seg = df[(df['menit'] >= start) & (df['menit'] <= end)]
         interval_name = f"{start}-{end}"
         if seg.empty:
-            print(f"Interval {interval_name} kosong — dilewati.")
+            # print(f"Interval {interval_name} kosong — dilewati.")
             continue
 
         G = build_graph_from_df(seg, pass_col_name=pass_col)
