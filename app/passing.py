@@ -99,8 +99,14 @@ def analyze_and_plot(G, pos, interval_name, previous_nodes, out_dir=OUT_DIR, sho
             node_colors.append('skyblue')
 
     # Gambar network
-    nx.draw_networkx_nodes(G, pos, node_color=node_colors, node_size=node_sizes, alpha=0.95)
-    nx.draw_networkx_edges(G, pos, edgelist=edges, edge_color='gray', width=scaled_weights, arrows=True, arrowsize=18)
+    nx.draw_networkx_nodes(G, pos, node_color=node_colors, node_size=node_sizes, alpha=0.70)
+# Bayangan tebal abu-abu
+    nx.draw_networkx_edges(
+        G, pos, edgelist=edges,
+        edge_color='white', width=scaled_weights,
+        arrows=True, arrowsize=[max(25, w*3) for w in scaled_weights], arrowstyle='-|>'
+    )
+
     nx.draw_networkx_labels(G, pos, font_size=9, font_weight='bold')
 
     edge_labels = nx.get_edge_attributes(G, 'weight')
