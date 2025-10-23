@@ -1,0 +1,39 @@
+{
+  "possession": {
+    "summary": {
+      "percentage": 44,
+      "completed": 72,
+      "intercepted": 28,
+      "total_passes": 110,
+      "xPass": "3.19 (TotalPass/Minutes)"
+    },
+    "players": [
+      {"name": "Maarten Paes", "stat": 10},
+      {"name": "Emil Audero", "stat": 21},
+      {"name": "Ernando Ari", "stat": 10},
+      {"name": "Justin Hubner", "stat": 12}
+    ]
+  },
+  "shooting": {
+    "summary": {
+      "total_shots": 21,
+      "on_target": 3,
+      "off_target": 11,
+      "xGoal": 0.12
+    },
+    "players": [
+      {"name": "Eliano Reijnders", "stat": 5},
+      {"name": "Jay Idzes", "stat": 3}
+    ]
+  },
+  "tackle": {
+    "summary": {
+      "total_tackles": 14,
+      "most_tackles_player": "Jay Idzes (12)"
+    },
+    "players": [
+      {"name": "Jordi Amat", "stat": 4},
+      {"name": "Kevin Diks", "stat": 3}
+    ]
+  }
+}

@@ -1,13 +1,19 @@
 # passing_per_10min_show_with_legend.py
 import pandas as pd
 import networkx as nx
+
+import matplotlib 
+matplotlib.use('Agg')
+
 import matplotlib.pyplot as plt
 from matplotlib.patches import Rectangle, Patch
 import math
 import os
 
-CSV_PATH = 'Matdis-Indonesia-Iraq - Sheet1.csv'
-OUT_DIR = '/mnt/data/passing_intervals_subs'
+SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
+CSV_PATH = os.path.join(SCRIPT_DIR, 'data', 'matdis_sheet1.csv')
+OUT_DIR = os.path.join(SCRIPT_DIR, 'static', 'img', 'passing_intervals')
+
 os.makedirs(OUT_DIR, exist_ok=True)
 
 def draw_pitch(ax):
@@ -40,7 +46,7 @@ def build_graph_from_df(df_segment, pass_col_name='pass'):
                     G.add_edge(passer, receiver, weight=1)
     return G
 
-def analyze_and_plot(G, pos, interval_name, previous_nodes, out_dir=OUT_DIR, show_plot=True):
+def analyze_and_plot(G, pos, interval_name, previous_nodes, out_dir=OUT_DIR, show_plot=False):
     """Analisis dan plot jaringan passing"""
     degree_centrality = nx.degree_centrality(G)
     in_strength = dict(G.in_degree(weight='weight'))
@@ -55,12 +61,24 @@ def analyze_and_plot(G, pos, interval_name, previous_nodes, out_dir=OUT_DIR, sho
 
     print(f"\n=== Interval {interval_name} ===")
     print(f"Nodes: {G.number_of_nodes()}, Edges: {G.number_of_edges()}")
+    
+    top_players_list = []
+    
     if not df_cent.empty:
         print("Top pemain (by Total):")
         print(df_cent.head(5))
+        
+        for index, row in df_cent.head(5).iterrows():
+            top_players_list.append({
+                "name": f"Pemain #{index}",
+                "stat": int(row['Total'])
+            })
 
-    plt.figure(figsize=(12, 7))
+    fig = plt.figure(figsize=(12, 7))
     ax = plt.gca()
+    ax.set_facecolor('black')
+    fig.set_facecolor('black')
+    
     draw_pitch(ax)
 
     edges = G.edges()
@@ -72,11 +90,11 @@ def analyze_and_plot(G, pos, interval_name, previous_nodes, out_dir=OUT_DIR, sho
 
     # Pemain baru → kuning, lama → biru
     node_colors = []
-    new_players = []
+    new_players_str = []
     for n in G.nodes():
         if n not in previous_nodes:
             node_colors.append('yellow')
-            new_players.append(n)
+            new_players_str.append(str(n))
         else:
             node_colors.append('skyblue')
 
@@ -88,35 +106,51 @@ def analyze_and_plot(G, pos, interval_name, previous_nodes, out_dir=OUT_DIR, sho
     edge_labels = nx.get_edge_attributes(G, 'weight')
     nx.draw_networkx_edge_labels(G, pos, edge_labels=edge_labels, font_color='red', font_size=8)
 
-    plt.title(f"Passing Network — {interval_name}", fontsize=14)
-
+    plt.title(f"Passing Network — {interval_name}", fontsize=14, color='white')
+    
     # Tambahkan legend untuk pemain baru/lama
     legend_elements = [
         Patch(facecolor='skyblue', edgecolor='black', label='Pemain Lama'),
         Patch(facecolor='yellow', edgecolor='black', label='Pemain Baru')
     ]
-    ax.legend(handles=legend_elements, loc='upper right', fontsize=9)
+    legend = ax.legend(handles=legend_elements, loc='upper right', fontsize=9)
+    plt.setp(legend.get_texts(), color='white')
 
     plt.tight_layout()
-    img_path = os.path.join(out_dir, f"passing_interval_{interval_name.replace(' ', '_')}.png")
-    plt.savefig(img_path, dpi=150)
-    print(f"Gambar disimpan: {img_path}")
+    
+    img_filename = f"passing_interval_{interval_name.replace(' ', '_')}.png"
+    img_path_abs = os.path.join(OUT_DIR, img_filename)
+    img_path_relative = f"img/passing_intervals/{img_filename}"
+    
+    plt.savefig(img_path_abs, dpi=150, facecolor='black', bbox_inches='tight')
+    print(f"Gambar disimpan: {img_path_abs}")
+    plt.close(fig)
+    
+    if new_players_str:
+        print(f"Pemain baru di interval {interval_name}: {', '.join(new_players_str)}")
 
-    if new_players:
-        print(f"Pemain baru di interval {interval_name}: {', '.join(new_players)}")
+    return {
+        "interval_name": interval_name,
+        "nodes": G.number_of_nodes(),
+        "edges": G.number_of_edges(),
+        "top_players": top_players_list,
+        "new_players": ", ".join(new_players_str) if new_players_str else "Tidak ada",
+        "graph_image_url": img_path_relative 
+    }
 
-    if show_plot:
-        plt.show()
-    else:
-        plt.close()
-
-def main():
+def generate_possession_data():
+    # Error Handling
+    if not os.path.exists(CSV_PATH):
+        print (f"Error Tidak ditemukan {CSV_PATH}")
+        return []
+    
     df = pd.read_csv(CSV_PATH)
     df.columns = [c.lower() for c in df.columns]
 
     if 'menit' not in df.columns:
         raise ValueError("CSV tidak memiliki kolom 'menit'.")
-
+        return []
+    
     pass_col = 'pass' if 'pass' in df.columns else None
     if not pass_col:
         candidates = [c for c in df.columns if 'pass' in c or 'umpan' in c]
@@ -142,12 +176,13 @@ def main():
     }
 
     previous_nodes = set()
+    all_interval_data = []
 
     for i in range(n_intervals):
         start = i*10
         end = start + 9
         seg = df[(df['menit'] >= start) & (df['menit'] <= end)]
-        interval_name = f"{start}_{end}"
+        interval_name = f"{start}-{end}"
         if seg.empty:
             print(f"Interval {interval_name} kosong — dilewati.")
             continue
@@ -158,8 +193,10 @@ def main():
 
         spring = nx.spring_layout(G, seed=42)
         pos = {node: base_pos.get(str(node), spring[node]) for node in G.nodes()}
-        analyze_and_plot(G, pos, interval_name, previous_nodes, show_plot=True)
+        
+        interval_data = analyze_and_plot(G, pos, interval_name, previous_nodes)
+        all_interval_data.append(interval_data)
+        
         previous_nodes.update(G.nodes())
-
-if __name__ == '__main__':
-    main()
+        
+    return all_interval_data

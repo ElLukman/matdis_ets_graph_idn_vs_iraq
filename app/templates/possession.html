@@ -1,0 +1,382 @@
+{% extends "base.html" %}
+{% block content %}
+
+<style>
+  /* Sembunyikan semua slide by default */
+  .slide {
+    display: none;
+  }
+  /* Tampilkan slide pertama */
+  .slide.active {
+    display: block;
+  }
+</style>
+
+<div class="w-full max-w-4xl mx-auto"> 
+  <div id="slider-container" class="relative">
+    
+    {% for data in data_intervals %}
+    <div class="slide {% if loop.first %}active{% endif %}">
+      
+      <div class="flex flex-col space-y-4">
+        
+        <div class="w-full h-[500px] flex items-center justify-center rounded-lg bg-neutral-800 p-4">
+          <img src="{{ url_for('static', filename=data.graph_image_url) }}" alt="Grafik {{ data.interval_name }}" class="max-w-full max-h-full object-contain">
+        </div>
+        
+        <div class="w-full bg-neutral-800 rounded-lg p-6">
+          <h2 class="text-2xl font-semibold text-green-400 mb-4">Menit:</h2>
+          <h2 class="text-2xl font-semibold mb-4">{{ data.interval_name }}</h2>
+          
+          <div class="grid grid-cols-2 md:grid-cols-3 gap-4 text-sm">
+            <div>
+              <p class="text-neutral-400">Total Nodes (Pemain)</p>
+              <p class="text-lg font-bold">{{ data.nodes }}</p>
+            </div>
+            <div>
+              <p class="text-neutral-400">Total Edges (Umpan)</p>
+              <p class="text-lg font-bold">{{ data.edges }}</p>
+            </div>
+            <div>
+              <p class="text-neutral-400">Pemain Baru Masuk</p>
+              <p class="text-lg font-bold text-yellow-400">{{ data.new_players }}</p>
+            </div>
+          </div>
+
+          <div class="mt-6">
+            <h3 class="text-green-400 font-semibold mb-2">Top Players (Total Umpan In/Out):</h3>
+            <ol class="list-decimal list-inside space-y-1">
+              {% for player in data.top_players %}
+                <li>{{ player.name }} ({{ player.stat }})</li>
+              {% else %}
+                <li>Data tidak tersedia</li>
+              {% endfor %}
+            </ol>
+          </div>
+        </div>
+        
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+
+  <div class="flex items-center justify-between mt-6 mb-6">
+    <button onclick="plusSlides(-1)" class="bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-6 rounded-lg">
+      &laquo; Sebelumnya
+    </button>
+    <div id="slide-counter" class="text-neutral-400 text-lg font-medium">
+      </div>
+    <button onclick="plusSlides(1)" class="bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-6 rounded-lg">
+      Selanjutnya &raquo;
+    </button>
+  </div>
+
+  
+  <div class="w-full bg-neutral-800 rounded-lg py-6 px-6 my-6">
+    <h1 class="text-center text-3xl pt-4 pb-4 font-semibold">Statistik</h1>
+
+    <div class="flex flex-wrap justify-around items-center gap-6">
+      
+      <div class="flex flex-col items-center">
+        <h2 class="text-green-500 text-xl font-semibold mb-3">Possesion Ball:</h2>
+        <div class="w-32 h-32 rounded-full border-8 border-white flex items-center justify-center">
+          <span class="text-white text-3xl font-bold">55%</span>
+        </div>
+      </div>
+
+      <div class="text-center">
+        <h2 class="text-xl font-semibold text-gray-300 mb-2">Total Pass:</h2>
+        <p class="text-5xl font-bold">367</p>
+      </div>
+
+    </div>
+  </div>
+
+  <div class="w-full bg-neutral-800 rounded-lg p-6">
+    <h1 class="text-center text-3xl pt-8 pb-8 font-semibold">Starting Lineup</h1>
+      <div class="relative overflow-x-auto shadow-md sm:rounded-lg">
+          <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
+              <thead class="text-xs text-gray-700 uppercase dark:text-gray-400">
+                  <tr>
+                      <th scope="col" class="px-6 py-3 bg-gray-50 dark:bg-gray-800">
+                          No Punggung
+                      </th>
+                      <th scope="col" class="px-6 py-3">
+                          Nama Pemain
+                      </th>
+                      <th scope="col" class="px-6 py-3 bg-gray-50 dark:bg-gray-800">
+                          Total Pass |deg out|
+                      </th>
+                      <th scope="col" class="px-6 py-3">
+                          Status
+                      </th>
+                  </tr>
+              </thead>
+              <tbody>
+                  <tr class="border-b border-gray-200 dark:border-gray-700">
+                      <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap bg-gray-50 dark:text-white dark:bg-gray-800">
+                          1
+                      </th>
+                      <td class="px-6 py-4">
+                          Marten Paes
+                      </td>
+                      <td class="px-6 py-4 bg-gray-50 dark:bg-gray-800">
+                          17
+                      </td>
+                      <td class="px-6 py-4">
+                          Starter
+                      </td>
+                  </tr>
+                  <tr class="border-b border-gray-200 dark:border-gray-700">
+                      <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap bg-gray-50 dark:text-white dark:bg-gray-800">
+                          2
+                      </th>
+                      <td class="px-6 py-4">
+                          Kevin Diks
+                      </td>
+                      <td class="px-6 py-4 bg-gray-50 dark:bg-gray-800">
+                          39 
+                      </td>
+                      <td class="px-6 py-4">
+                          Starter
+                      </td>
+                  </tr>
+                  <tr class="border-b border-gray-200 dark:border-gray-700">
+                      <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap bg-gray-50 dark:text-white dark:bg-gray-800">
+                          5
+                      </th>
+                      <td class="px-6 py-4">
+                          Rizky Ridho
+                      </td>
+                      <td class="px-6 py-4 bg-gray-50 dark:bg-gray-800">
+                          33
+                      </td>
+                      <td class="px-6 py-4">
+                          Starter
+                      </td>
+                  </tr>
+                  <tr class="border-b border-gray-200 dark:border-gray-700">
+                      <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap bg-gray-50 dark:text-white dark:bg-gray-800">
+                          3
+                      </th>
+                      <td class="px-6 py-4">
+                          Jay Idzes 
+                      </td>
+                      <td class="px-6 py-4 bg-gray-50 dark:bg-gray-800">
+                          46
+                      </td>
+                      <td class="px-6 py-4">
+                          Starter
+                      </td>
+                  </tr>
+                  <tr>
+                      <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap bg-gray-50 dark:text-white dark:bg-gray-800">
+                          21
+                      </th>
+                      <td class="px-6 py-4">
+                          Dean James 
+                      </td>
+                      <td class="px-6 py-4 bg-gray-50 dark:bg-gray-800">
+                          24
+                      </td>
+                      <td class="px-6 py-4">
+                          Starter
+                      </td>
+                  </tr>
+                  <tr>
+                      <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap bg-gray-50 dark:text-white dark:bg-gray-800">
+                          17
+                      </th>
+                      <td class="px-6 py-4">
+                          Calvin Verdonk
+                      </td>
+                      <td class="px-6 py-4 bg-gray-50 dark:bg-gray-800">
+                          49
+                      </td>
+                      <td class="px-6 py-4">
+                          Starter
+                      </td>
+                  </tr>
+                  <tr>
+                      <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap bg-gray-50 dark:text-white dark:bg-gray-800">
+                          14
+                      </th>
+                      <td class="px-6 py-4">
+                          Joel Pelupessy 
+                      </td>
+                      <td class="px-6 py-4 bg-gray-50 dark:bg-gray-800">
+                          31
+                      </td>
+                      <td class="px-6 py-4">
+                          Starter
+                      </td>
+                  </tr>
+                  <tr>
+                      <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap bg-gray-50 dark:text-white dark:bg-gray-800">
+                          19
+                      </th>
+                      <td class="px-6 py-4">
+                          Tom Haye  
+                      </td>
+                      <td class="px-6 py-4 bg-gray-50 dark:bg-gray-800">
+                          37
+                      </td>
+                      <td class="px-6 py-4">
+                          Starter
+                      </td>
+                  </tr>
+                  <tr>
+                      <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap bg-gray-50 dark:text-white dark:bg-gray-800">
+                          23
+                      </th>
+                      <td class="px-6 py-4">
+                          Eliano Reijnders
+                      </td>
+                      <td class="px-6 py-4 bg-gray-50 dark:bg-gray-800">
+                          8
+                      </td>
+                      <td class="px-6 py-4">
+                          Starter
+                      </td>
+                  </tr>
+                  <tr>
+                      <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap bg-gray-50 dark:text-white dark:bg-gray-800">
+                          15
+                      </th>
+                      <td class="px-6 py-4">
+                          Ricky Kambuaya 
+                      </td>
+                      <td class="px-6 py-4 bg-gray-50 dark:bg-gray-800">
+                          7
+                      </td>
+                      <td class="px-6 py-4">
+                          Starter
+                      </td>
+                  </tr>
+                  <tr>
+                      <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap bg-gray-50 dark:text-white dark:bg-gray-800">
+                          13
+                      </th>
+                      <td class="px-6 py-4">
+                          Mauro Zijlstra 
+                      </td>
+                      <td class="px-6 py-4 bg-gray-50 dark:bg-gray-800">
+                          4
+                      </td>
+                      <td class="px-6 py-4">
+                          Starter
+                      </td>
+                  </tr>
+                  <tr>
+                      <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap bg-gray-50 dark:text-white dark:bg-gray-800">
+                          11
+                      </th>
+                      <td class="px-6 py-4">
+                          Ragnar Oratmangoen 
+                      </td>
+                      <td class="px-6 py-4 bg-gray-50 dark:bg-gray-800">
+                          9
+                      </td>
+                      <td class="px-6 py-4">
+                          Subtitutsi
+                      </td>
+                  </tr>
+                  <tr>
+                      <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap bg-gray-50 dark:text-white dark:bg-gray-800">
+                          10
+                      </th>
+                      <td class="px-6 py-4">
+                          Ole Romenny 
+                      </td>
+                      <td class="px-6 py-4 bg-gray-50 dark:bg-gray-800">
+                          6
+                      </td>
+                      <td class="px-6 py-4">
+                          Subtitutsi
+                      </td>
+                  </tr>
+                  <tr>
+                      <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap bg-gray-50 dark:text-white dark:bg-gray-800">
+                          9
+                      </th>
+                      <td class="px-6 py-4">
+                          Milliano Jonathans 
+                      </td>
+                      <td class="px-6 py-4 bg-gray-50 dark:bg-gray-800">
+                          6
+                      </td>
+                      <td class="px-6 py-4">
+                          Subtitutsi
+                      </td>
+                  </tr>
+                  <tr>
+                      <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap bg-gray-50 dark:text-white dark:bg-gray-800">
+                          22
+                      </th>
+                      <td class="px-6 py-4">
+                          Nathan Tjoe-A-On 
+                      </td>
+                      <td class="px-6 py-4 bg-gray-50 dark:bg-gray-800">
+                          5
+                      </td>
+                      <td class="px-6 py-4">
+                          Subtitutsi
+                      </td>
+                  </tr>
+                  <tr>
+                      <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap bg-gray-50 dark:text-white dark:bg-gray-800">
+                          7
+                      </th>
+                      <td class="px-6 py-4">
+                          Ramadhan Sananta
+                      </td>
+                      <td class="px-6 py-4 bg-gray-50 dark:bg-gray-800">
+                          1
+                      </td>
+                      <td class="px-6 py-4">
+                          Subtitutsi
+                      </td>
+                    </tr>
+              </tbody>
+          </table>
+      </div>
+
+  </div>
+
+</div>
+
+
+<script>
+  let slideIndex = 1;
+  showSlides(slideIndex);
+
+  function plusSlides(n) {
+    showSlides(slideIndex += n);
+  }
+
+  function showSlides(n) {
+    let i;
+    let slides = document.getElementsByClassName("slide");
+    let counter = document.getElementById("slide-counter");
+    
+    if (slides.length === 0) return; 
+
+    if (n > slides.length) {slideIndex = 1}
+    if (n < 1) {slideIndex = slides.length} 
+    
+    // Sembunyikan semua
+    for (i = 0; i < slides.length; i++) {
+      slides[i].style.display = "none";
+      slides[i].classList.remove("active");
+    }
+    
+    // Tampilkan yang aktif
+    slides[slideIndex-1].style.display = "block";
+    slides[slideIndex-1].classList.add("active");
+    
+    // Update counter
+    counter.innerHTML = slideIndex + " / " + slides.length;
+  }
+</script>
+
+{% endblock %}

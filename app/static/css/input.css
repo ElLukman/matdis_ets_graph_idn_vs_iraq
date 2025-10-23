@@ -1,0 +1,8 @@
+@font-face {
+  font-family: 'fifa-26';
+  src: url('../fonts/fifa-26.otf') format('opentype'); 
+}
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;

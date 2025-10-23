@@ -1,0 +1,91 @@
+{% extends "base.html" %}
+{% block content %}
+
+<div class="w-full max-w-4xl mx-auto"> 
+  <div class="w-full bg-neutral-800 rounded-lg py-6 px-6 my-6">
+    <div id="graph-container" class="bg-gray-500 border border-neutral-800 flex items-center justify-center rounded-lg shadow-lg">  
+    </div>
+
+    <div id="info-panel" class="my-6 flex flex-col items-center">
+    </div>
+
+    <div id="player-list-container" class="mt-10 flex flex-col items-center">
+    </div>
+  </div>
+
+
+    <div class="w-full bg-neutral-800 rounded-lg my-6">
+    <h1 class="text-center text-2xl pt-8 pb-8 font-semibold">Info</h1>
+      <div class="relative overflow-x-auto shadow-md sm:rounded-lg">
+          <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
+              <thead class="text-xs text-gray-700 uppercase dark:text-gray-400">
+                  <tr>
+                      <th scope="col" class="px-6 py-3 bg-gray-50 dark:bg-gray-800">
+                          No Punggung
+                      </th>
+                      <th scope="col" class="px-6 py-3">
+                          Nama Pemain
+                      </th>
+                  </tr>
+              </thead>
+              <tbody>
+                  <tr class="border-b border-gray-200 dark:border-gray-700">
+                      <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap bg-gray-50 dark:text-white dark:bg-gray-800">
+                          17
+                      </th>
+                      <td class="px-6 py-4">
+                          Calvin Verdonk
+                      </td>
+                  </tr>
+                  <tr class="border-b border-gray-200 dark:border-gray-700">
+                      <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap bg-gray-50 dark:text-white dark:bg-gray-800">
+                          13
+                      </th>
+                      <td class="px-6 py-4">
+                          M. Zijlstra
+                      </td>
+                  </tr>
+                  <tr class="border-b border-gray-200 dark:border-gray-700">
+                      <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap bg-gray-50 dark:text-white dark:bg-gray-800">
+                          19
+                      </th>
+                      <td class="px-6 py-4">
+                          Tom Haye
+                      </td>
+                  </tr>
+                  <tr class="border-b border-gray-200 dark:border-gray-700">
+                      <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap bg-gray-50 dark:text-white dark:bg-gray-800">
+                          23
+                      </th>
+                      <td class="px-6 py-4">
+                          Eliano Reijnders
+                      </td>
+                  </tr>
+                  <tr>
+                      <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap bg-gray-50 dark:text-white dark:bg-gray-800">
+                          21
+                      </th>
+                      <td class="px-6 py-4">
+                          Dean James 
+                      </td>
+                  </tr>
+                  
+              </tbody>
+          </table>
+      </div>
+
+</div>
+
+
+
+
+<script src="https://d3js.org/d3.v7.min.js"></script>
+<script src="{{ url_for('static', filename='js/main.js') }}"></script>
+<script src="{{ url_for('static', filename='js/match_stats.js') }}"></script>
+
+<script>
+  document.addEventListener("DOMContentLoaded", () => {
+    loadTab('{{ active_tab }}');
+  });
+</script>
+{% endblock %}
