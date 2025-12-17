@@ -1,8 +1,6 @@
 # =================================================================
 # APLIKASI SISTEM PAKAR ANALISIS TIMNAS
 # File: main.py
-# Deskripsi: Memenuhi Rubrik EAS B.3 (8 Tombol) & B.4 (Custom Input)
-# Fitur Baru: Trace Logic untuk Inferensi 5 & Cheat Sheet Query
 # =================================================================
 
 import streamlit as st
