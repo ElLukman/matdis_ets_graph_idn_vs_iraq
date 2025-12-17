@@ -7,7 +7,6 @@
 
 import streamlit as st
 from pyswip import Prolog
-import pandas as pd
 import time
 
 # --- KONFIGURASI FILE KB ---
